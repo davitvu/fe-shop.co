@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { useAuth } from '@/context/Auth.context';
-import Loading from '@/components/Loading/Loading';
+import { Input } from '@/components/Input/Input';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -16,7 +16,9 @@ const Home = () => {
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
             Welcome to Shop.co
           </h1>
-
+          <Input 
+            placeholder='email'
+          />
           <p className="text-xl text-gray-600 mb-8">
             Your one-stop e-commerce platform for all your shopping needs
           </p>
