@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-interface AuthContextType {
+type AuthContextType = {
     user: User | null;
     setUser: (v: User) => void;
     isLoading: boolean;
@@ -17,38 +17,43 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        checkAuth();
+        const isLogged = localStorage.getItem('user');
+        if (isLogged) {
+            fetchMe();
+        }
     }, [])
 
-    const checkAuth = async () => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            setIsLoading(false);
-            return;
-        }
-
+    const fetchMe = async () => {
+        setIsLoading(true);
         try {
             const res = await authService.getMe();
-            setUser(res.data);
+            localStorage.setItem('user', JSON.stringify(res.data?.user))
+            if (!res.success) {
+                setIsLoading(false);
+                return;
+            }
+            setUser(res.data?.user!);
         } catch (error) {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
+            setUser(null);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-
-        setUser(null);
+    const logout = async () => {
+        try {
+            const res = await authService.logout();
+            localStorage.removeItem('user');
+        } catch (error: any) {
+            toast(error)
+        } finally {
+            setUser(null);
+        }
         toast('Logged out successfully');
-
         navigate('/');
     }
 

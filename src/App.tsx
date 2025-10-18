@@ -1,10 +1,13 @@
 import { Fragment, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { AuthProvider } from './context/Auth.context.tsx';
+import { AuthProvider } from './context/AuthContext.tsx';
 import NotFound from './pages/NotFound/NotFound.tsx';
-import PrivateRoute, { routes } from './routes/index.tsx';
+import { GuestRoute, PrivateRoute, routes } from './routes/index.tsx';
 import Loading from './components/Loading/Loading.tsx';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 function App() {
   return (
@@ -16,17 +19,23 @@ function App() {
               const Page = route.element as React.ComponentType<any>;
               const Layout = (route.layout ?? Fragment) as React.ComponentType<{ children: React.ReactNode }>;
 
-              const element = route.isPrivate ? (
-                <PrivateRoute>
+              let element = (<Layout><Page /></Layout>)
+              if (route.isPrivate) {
+                element = (
+                  <PrivateRoute>
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  </PrivateRoute>
+                )
+              }
+              if (route.isGuest) {
+                <GuestRoute>
                   <Layout>
                     <Page />
                   </Layout>
-                </PrivateRoute>
-              ) : (
-                <Layout>
-                  <Page />
-                </Layout>
-              );
+                </GuestRoute>
+              }
 
               return <Route key={route.path} path={route.path} element={element} />;
             })}

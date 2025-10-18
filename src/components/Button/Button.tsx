@@ -1,55 +1,40 @@
-import { cn } from "@/lib/utils"
+// components/ui/button.tsx
+import { cn } from "@/lib/utils";
+import { Circle } from "lucide-react";
 
-type Variants = 'primary' | 'outline'
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "primary" | "secondary" | "outline";
+  loading?: boolean;
+};
 
-const buttonVariants = cn(
-    "flex justify-center items-center rounded-full",
-    {
-        primary: 'bg-black text-white',
-        outline: 'bg-white text-black border-[1px] border-black'
-    }
-)
+export function Button({
+  className,
+  variant = "primary",
+  loading = false,
+  disabled,
+  type = "button",
+  children,
+  ...props
+}: ButtonProps) {
+  const buttonClass = cn(
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl w-full h-12 text-sm font-medium cursor-pointer transition-all active:scale-95 transition-transform disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 aria-invalid:border-destructive˝",
+    variant === "primary" && "bg-black text-white hover:opacity-70",
+    variant === "secondary" && "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500",
+    variant === "outline" && "bg-white text-black border border-black",
+    className
+  );
 
-const Button = ({
-    className,
-    variant = 'primary',
-    isLoading,
-    children,
-    disabled,
-    ...props
-}: React.ComponentProps<"button">) & Variants<buttonVariants> => {
-
-
-    return (
-        <button
-            ref={}
-            className={buttonVariants[variant]}
-            disabled={disabled || isLoading}
-            {...props}
-        >
-            {isLoading && (
-                <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                >
-                    <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                    />
-                    <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                </svg>
-            )}
-            {children}
-        </button>
-    )
+  return (
+    <button
+      type={type}
+      className={buttonClass}
+      disabled={disabled || loading}
+      {...props}
+    >
+      {loading && (
+        <Circle className="animate-spin"/>
+      )}
+      {children}
+    </button>
+  );
 }

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-type useModalReturn = {
-    isOpen?: boolean;
-    openModal?: () => void;
-    closeModal?: () => void;
-    toggleModal?: () => void;
+type ModalReturn = {
+    isOpen: boolean;
+    openModal: () => void;
+    closeModal: () => void;
+    toggleModal: () => void;
     modalRef?: React.MutableRefObject<HTMLDivElement | null>
 }
 
@@ -14,9 +14,13 @@ export const useModal = ({
 }: {
     initialState?: boolean,
     closeOnOutsideClick?: boolean
-} = {}): useModalReturn => {
+} = {}): ModalReturn => {
     const [isOpen, setIsOpen] = useState<boolean>(initialState);
     const modalRef = useRef<HTMLDivElement | null>(null);
+
+    const openModal = useCallback(() => setIsOpen(true), []);
+    const closeModal = useCallback(() => setIsOpen(false), []);
+    const toggleModal = useCallback(() => setIsOpen(prev => !prev), []);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -34,7 +38,7 @@ export const useModal = ({
             document.addEventListener('mousedown', handleClickOutside);
         }
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isOpen, closeOnOutsideClick]);
+    }, [isOpen, closeOnOutsideClick, closeModal]);
 
     // prevent scroll
     useEffect(() => {
@@ -47,13 +51,6 @@ export const useModal = ({
             document.body.style.overflow = 'unset';
         };
     }, [isOpen]);
-    
-    const openModal = useCallback(() => setIsOpen(true), []);
-    const closeModal = useCallback(() => setIsOpen(false), []);
-    const toggleModal = useCallback(() => setIsOpen(prev => !prev), []);
-
-    console.log(isOpen);
-
 
     return { isOpen, openModal, closeModal, toggleModal, modalRef }
 };
