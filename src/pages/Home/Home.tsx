@@ -1,52 +1,40 @@
-import { useNavigate } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
-import { useAuth } from '@/context/Auth.context';
-import { Input } from '@/components/Input/Input';
+import HeroSection from '@/components/HeroSection/HeroSection';
+import BrandLogosSection from '@/components/BrandLogosSection/BrandLogosSection';
+import NewArrivalsSection from '@/components/NewArrivalsSection/NewArrivalsSection';
+import TopSellingSection from '@/components/TopSellingSection/TopSellingSection';
+import BrowseByStyleSection from '@/components/BrowseByStyleSection/BrowseByStyleSection';
+import CustomerReviews from '@/components/CustomerReviews/CustomerReviews';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { apiProduct } from '@/services/axios';
 
 const Home = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const [listProducts, setListProduct] = useState([]);
+  const [productLoading, setProductLoading] = useState(true);
+
+  const getProducts = async () => {
+    try {
+      const res = await apiProduct.get(`/product?sortType=${0}&page=${1}&${10}`)
+      setListProduct(res.data.contents);
+      setProductLoading(false);
+    } catch (error) {
+      toast.error("get product error")
+    }
+  }
+
+  useEffect(() => {
+    getProducts();
+  }, [])
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto">
-          <ShoppingBag className="w-20 h-20 text-blue-600 mx-auto mb-8" />
-
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            Welcome to Shop.co
-          </h1>
-          <Input 
-            placeholder='email'
-          />
-          <p className="text-xl text-gray-600 mb-8">
-            Your one-stop e-commerce platform for all your shopping needs
-          </p>
-
-          <div className="flex gap-4 justify-center">
-            {isAuthenticated ? (
-              <>
-                <button onClick={() => navigate('/products')}>
-                  Browse Products
-                </button>
-                <button onClick={() => navigate('/profile')}>
-                  My Profile
-                </button>
-              </>
-            ) : (
-              <>
-                <button onClick={() => navigate('/login')}>
-                  Sign in
-                </button>
-                <button onClick={() => navigate('/register')}>
-                  Sign up
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+    <>
+      <HeroSection />
+      <BrandLogosSection />
+      <NewArrivalsSection data={listProducts.slice(0, 7)} productLoading={productLoading}/>
+      <TopSellingSection data={listProducts.slice(7, 14)} productLoading={productLoading} />
+      <BrowseByStyleSection />
+      <CustomerReviews />
+    </>
   );
 };
 

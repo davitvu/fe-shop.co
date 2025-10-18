@@ -1,13 +1,12 @@
 import Header from "@/components/Header/Header";
-import { Outlet } from "react-router-dom";
 
-const HeaderOnly = () => {
+const HeaderOnly = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
             <Header />
-            <main>
+            <main className="mt-[70px]">
                 <div>
-                    <Outlet />
+                    {children}
                 </div>
             </main>
         </>

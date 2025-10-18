@@ -11,11 +11,31 @@ export interface User {
   createdAt: string;
   updatedAt: string;
 }
+export interface FetchMeResponse {
+  user: User;
+}
+
+export interface BackendResponse<T> {
+  success: boolean;
+  message: string;
+  data?: T
+  error?: ApiError
+}
 
 // Auth types
 export interface LoginRequest {
   email: string;
   password: string;
+}
+
+export interface InfoUserRequest {
+  firstName: string;
+  lastName: string;
+  phone: string;
+}
+
+export interface AvatarRequest {
+
 }
 
 export interface RegisterRequest {
@@ -27,11 +47,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  success: boolean;
-  message: string;
-  user: User;
-  accessToken: string;
-  refreshToken: string;
+  user: User,
 }
 
 // API Error

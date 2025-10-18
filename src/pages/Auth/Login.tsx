@@ -1,14 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Mail, Lock, LogIn } from 'lucide-react';
-import { useAuth } from '@/context/Auth.context';
+import { Eye, EyeOff, KeyRound, Mail } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import type { LoginRequest } from '@/types';
 import { authService } from '@/services/auth.service';
 import { toast } from 'react-toastify';
-import Input from '@/components/Input/Input';
+import { Input } from '@/components/Input/Input';
+import { Button } from '@/components/Button/Button';
+import { LogoFixed } from '@/components/Logo/Logo';
+import { useState } from 'react';
 
 const Login = () => {
   const { setIsLoading, setUser, isLoading } = useAuth();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const navigate = useNavigate();
   const {
     register,      // Function để register input
@@ -25,13 +29,14 @@ const Login = () => {
     setIsLoading(true);
     try {
       const res = await authService.login(data);
-      console.log(res);
-      
-      localStorage.setItem('accessToken', res.accessToken);
-      localStorage.setItem('refreshToken', res.refreshToken);
+      if (!res.success) {
+        toast.error(res.message || 'Login failed!');
+        setIsLoading(false);
+        return;
+      }
 
-      setUser(res.user);
-
+      setUser(res.data?.user!);
+      localStorage.setItem("user", JSON.stringify(res.data?.user!))
       toast.success('Login successful!');
       navigate('/');
     } catch (error: any) {
@@ -43,63 +48,71 @@ const Login = () => {
     }
   };
 
-
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">Welcome back</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
-              Sign up
-            </Link>
+    <div className="min-h-screen w-full relative flex items-center py-12 px-7">
+      {/* Lavender Blush Flow Gradient (Top Left to Bottom Right) */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: `linear-gradient(135deg, #E1BEE7 0%, #F3E5F5 20%, #FCE4EC 40%, #FFF0F5 60%, #F8BBD9 80%, #E1BEE7 100%)`,
+        }}
+      />
+
+      <div className='relative w-full z-10 flex flex-col items-center'>
+        <LogoFixed />
+        <div className='text-center'>
+          <h2 className='text-3xl font-bold text-gray-900'>Welcome back</h2>
+          <p className='mt-2 text-sm text-gray-600'>
+            Don't have an account? <Link to={'/register'} className='text-[#4f81c7] hover:text-blue-500 font-medium underline'>Sign up</Link>
           </p>
         </div>
-
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            <div className="relative">
-              <Mail className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
-              <Input
-                label="Email address"
-                type="email"
-                placeholder="john@example.com"
-                className="pl-10"
-                error={errors.email?.message}
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Invalid email address',
-                  },
-                })}
-              />
+        <form className="mt-8 space-y-6 w-full max-w-[500px]" onSubmit={handleSubmit(onSubmit)}>
+          <div className='relative'>
+            <Mail className='absolute top-2 left-2 h-6 w-6' />
+            <Input
+              type='email'
+              placeholder="john@example.com"
+              error={errors.email?.message}
+              className='pl-10 h-10'
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email address',
+                },
+              })}
+            />
+          </div>
+          <div className='relative'>
+            <KeyRound className='absolute top-2 left-2 h-6 w-6' />
+            <div onClick={() => setShowPassword(!showPassword)} className='absolute top-2 right-3 h-6 w-6 cursor-pointer'>
+              {showPassword ? (
+                <EyeOff />
+              ) : (
+                <Eye />
+              )}
             </div>
-
-            <div className="relative">
-              <Lock className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
-              <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                className="pl-10"
-                error={errors.password?.message}
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: {
-                    value: 6,
-                    message: 'Password must be at least 6 characters',
-                  },
-                })}
-              />
-            </div>
+            <Input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="••••••••"
+              error={errors.password?.message}
+              className='px-10 h-10'
+              {...register('password', {
+                required: 'Password is required',
+                minLength: {
+                  value: 6,
+                  message: 'Password must be at least 6 characters',
+                },
+              })}
+            />
           </div>
 
-          <button type="submit" className="w-full bg-black text-white">
-            <LogIn className="w-5 h-5 mr-2" />
-            Sign in
-          </button>
+          <Button
+            type='submit'
+            loading={isLoading}
+          >
+            Login
+          </Button>
         </form>
       </div>
     </div>

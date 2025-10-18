@@ -1,9 +1,5 @@
-import { useAuth } from "@/context/Auth.context";
 import type { HeaderType } from "@/types";
-import { CircleUserRound, Search, ShoppingCart } from "lucide-react";
-
-// const { logout } = useAuth();
-
+import { CircleUserRound, ShoppingCart } from "lucide-react";
 
 export const mainNav: HeaderType[] = [
     { id: 'shop', label: 'Shop', href: '/shop' },
@@ -13,11 +9,6 @@ export const mainNav: HeaderType[] = [
 ]
 
 export const headerActions: HeaderType[] = [
-    {
-        id: 'search',
-        icon: <Search />,
-        onClick: () => console.log('Open search modal'),
-    },
     {
         id: 'cart',
         icon: <ShoppingCart />,
