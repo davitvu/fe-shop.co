@@ -11,6 +11,6 @@ export const LogoFixed = () => {
 
 export const Logo = ({ className }: { className?: string }) => {
     return (
-        <Link to={'/'} className={cn('font-black text-2xl inline-block transition-transform active:scale-95', className)}>SHOP.CO</Link>
+        <Link to={'/'} className={cn('font-integral text-[32px]! inline-block transition-transform active:scale-95', className)}>SHOP.CO</Link>
     )
 }
