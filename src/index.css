@@ -5,18 +5,89 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Custom styles nếu cần */
 @layer base {
-  * {
+  @font-face {
+    font-family: "Integral CF";
+    src: url("/fonts/Integral_CF/Fontspring-DEMO-integralcf-bold.otf") format("woff2");
+    font-weight: 700;
+    font-style: normal;
   }
-  
-  body {
-    @apply bg-white text-gray-900;
+
+  @font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi/Satoshi-Light.otf") format("woff2");
+    font-weight: 200;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi/Satoshi-Regular.otf") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi/Satoshi-Medium.otf") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi/Satoshi-Bold.otf") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Satoshi";
+    src: url("/fonts/Satoshi/Satoshi-Black.otf") format("woff2");
+    font-weight: 900;
+    font-style: normal;
+  }
+
+  * {
+    font-family: "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI";
   }
 }
 
-/* Utility classes tùy chỉnh */
+@theme {
+  --font-integral: "Integral CF", -apple-system, BlinkMacSystemFont, "Segoe UI";
+  --font-satoshi: "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI";
+}
+
+
 @layer utilities {
+  .section-title {
+    font-family: var(--font-integral);
+    font-size: 50px;
+    font-weight: 700;
+  }
+
+  @keyframes caret-blink {
+
+    0%,
+    70%,
+    100% {
+      opacity: 1;
+    }
+
+    20%,
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .animate-caret-blink {
+    animation: caret-blink 1.2s ease-out infinite;
+  }
 }
 
 /* HTML: <div class="loader"></div> */
@@ -28,6 +99,7 @@ body {
   border: 2px solid;
   position: relative;
 }
+
 .loader::before {
   content: "";
   position: absolute;
@@ -37,8 +109,11 @@ body {
   background: currentColor;
   animation: l6 2s infinite;
 }
+
 @keyframes l6 {
-    100% {inset:0}
+  100% {
+    inset: 0
+  }
 }
 
 .navLinkModal {
@@ -49,9 +124,11 @@ body {
   80% {
     scale: 80%;
   }
+
   90% {
     scale: 110%;
   }
+
   100% {
     scale: 100%;
   }

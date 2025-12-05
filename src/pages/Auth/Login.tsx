@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Eye, EyeOff, KeyRound, Mail } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
 import type { LoginRequest } from '@/types';
 import { authService } from '@/services/auth.service';
 import { toast } from 'react-toastify';
@@ -9,9 +8,12 @@ import { Input } from '@/components/Input/Input';
 import { Button } from '@/components/Button/Button';
 import { LogoFixed } from '@/components/Logo/Logo';
 import { useState } from 'react';
+import { GoogleLoginButton } from '@/components/LoginWith/GoogleLoginButton';
+import { useAuth } from '@/context/AuthContext';
 
 const Login = () => {
-  const { setIsLoading, setUser, isLoading } = useAuth();
+  const { fetchProfile, setUser } = useAuth();
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const navigate = useNavigate();
   const {
@@ -26,17 +28,17 @@ const Login = () => {
   });
 
   const onSubmit = async (data: LoginRequest) => {
-    setIsLoading(true);
+    setLoading(true);
     try {
       const res = await authService.login(data);
       if (!res.success) {
         toast.error(res.message || 'Login failed!');
-        setIsLoading(false);
+        setLoading(false);
         return;
       }
-
+      fetchProfile();
       setUser(res.data?.user!);
-      localStorage.setItem("user", JSON.stringify(res.data?.user!))
+      localStorage.setItem("user", JSON.stringify(res.data?.user))
       toast.success('Login successful!');
       navigate('/');
     } catch (error: any) {
@@ -44,7 +46,7 @@ const Login = () => {
       toast.error(message);
       throw error;
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -109,11 +111,22 @@ const Login = () => {
 
           <Button
             type='submit'
-            loading={isLoading}
+            loading={loading}
           >
             Login
           </Button>
         </form>
+        <div className='text-[#3b82f6] mt-3 text-base hover:underline'>
+          <Link to={"/forgot"}>Forgot password?</Link>
+        </div>
+        <div className='w-full max-w-[480px] my-3 text-[#71717A] flex items-center gap-2 justify-center'>
+          <div className='grow h-[1px] bg-[#71717A]' />
+          <div className='text-sm'>OR</div>
+          <div className='grow h-[1px] bg-[#71717A]' />
+        </div>
+        <div className='w-full max-w-[500px] active:scale-95'>
+          <GoogleLoginButton />
+        </div>
       </div>
     </div>
   );

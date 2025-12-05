@@ -5,10 +5,10 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
     error?: string;
 };
 
-const Input = ({ className, type, label, error, id, ...props }: InputProps) => {
+const Input = ({ className, type, label, error, value, id, ...props }: InputProps) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
     const errorId = inputId ? `${inputId}-error` : undefined;
-
+    
     return (
         <>
             {label && (
@@ -22,6 +22,7 @@ const Input = ({ className, type, label, error, id, ...props }: InputProps) => {
             <input
                 id={inputId}
                 type={type}
+                value={value}
                 aria-invalid={!!error || undefined}
                 aria-describedby={error ? errorId : undefined}
                 className={cn(

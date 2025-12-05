@@ -1,11 +1,16 @@
 import Loading from "@/components/Loading/Loading";
 import { useAuth } from "@/context/AuthContext";
-import { lazy } from "react"
-import { Navigate, useLocation } from "react-router-dom";
+import Category from "@/pages/Category/Category";
+import { lazy, type ReactElement } from "react"
+import { Navigate } from "react-router-dom";
 
 const Home = lazy(() => import('@/pages/Home/Home'));
 const Login = lazy(() => import('@/pages/Auth/Login'));
 const Register = lazy(() => import('@/pages/Auth/Register'));
+const Forgot = lazy(() => import('@/pages/Auth/Forgot'));
+const VerifyOtp = lazy(() => import('@/pages/Auth/VerifyOtp'));
+const AuthCallback = lazy(() => import('@/pages/Auth/AuthCallback'));
+const ResetPassword = lazy(() => import('@/pages/Auth/ResetPassword'));
 const Profile = lazy(() => import('@/pages/Profile/Profile'));
 const Shop = lazy(() => import('@/pages/Shop/Shop'))
 const Cart = lazy(() => import('@/pages/Cart/Cart'))
@@ -18,10 +23,10 @@ export type AnyLazyComponent = React.LazyExoticComponent<AnyComponent>;
 
 export interface RouteConfig {
     path: string;
-    element: React.ComponentType<any> | React.LazyExoticComponent<React.ComponentType<any>>;
+    element: React.ComponentType<ReactElement> | React.LazyExoticComponent<React.ComponentType<any>>;
     layout?: (AnyComponent | AnyLazyComponent);
-    isPrivate?: boolean;
-    isGuest?: boolean;
+    isPrivate?: boolean; // những route cần phải đăng nhập thì mới truy cập được
+    isGuest?: boolean; // những route đã đăng nhập rồi thì không vào được
 }
 
 export const routes: RouteConfig[] = [
@@ -33,12 +38,32 @@ export const routes: RouteConfig[] = [
     {
         path: '/login',
         element: Login,
-        isGuest: true
+        isGuest: true,
     },
     {
         path: '/register',
         element: Register,
-        isGuest: true
+        isGuest: true,
+    },
+    {
+        path: '/forgot',
+        element: Forgot,
+        isGuest: true,
+    },
+    {
+        path: '/otp',
+        element: VerifyOtp,
+        isGuest: true,
+    },
+    {
+        path: '/reset',
+        element: ResetPassword,
+        isGuest: true,
+    },
+    {
+        path: '/auth/callback',
+        element: AuthCallback,
+        isGuest: true,
     },
     {
         path: '/shop',
@@ -65,19 +90,14 @@ export const routes: RouteConfig[] = [
 
 export function PrivateRoute({ children }: { children: React.ReactElement }) {
     const { isAuthenticated, isLoading } = useAuth();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
-    console.log("private route", isAuthenticated);
+
     if (isLoading) return <Loading />
-    return isAuthenticated ? children : <Navigate to={from} replace />;
+    return isAuthenticated ? children : <Navigate to={'/'} replace />;
 }
 
 export function GuestRoute({ children }: { children: React.ReactElement }) {
     const { isAuthenticated, isLoading } = useAuth();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
-    console.log(from);
-    
+
     if (isLoading) return <Loading />
-    return isAuthenticated ? <Navigate to={from} replace /> : children;
+    return isAuthenticated ? <Navigate to={'/'} replace /> : children;
 }

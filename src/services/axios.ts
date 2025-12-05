@@ -5,9 +5,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4953
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json'
-  },
   withCredentials: true
 });
 
@@ -58,22 +55,31 @@ api.interceptors.response.use(
     return response;
   }, async (error) => {
     const originalRequest = error.config;
-    
+
+    // những API không cần check
+    if (originalRequest.url.includes("/auth/login") ||
+      originalRequest.url.includes("/auth/register") ||
+      originalRequest.url.includes("/auth/refresh-token") ||
+      originalRequest.url.includes("/auth/forgot-password") ||
+      originalRequest.url.includes("/auth/verify-otp/token") ||
+      originalRequest.url.includes("/auth/reset") ||
+      originalRequest.url.includes("/auth/verify-email")
+    ) {
+      return Promise.reject(error);
+    }
+
     if (!error.response) return Promise.reject(error);
     if (error.response.status === 401 && !originalRequest._retry) {
-      console.log("123")
       // Nếu đang refresh thì thêm mấy thằng chó đến sau chỉ cần vào hàng đợi ké token
       if (isRefreshing) {
         return new Promise<void>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then(() =>{ 
+          .then(() => {
             api(originalRequest)
-            console.log("12313")
           })
           .catch(err => {
             Promise.reject(err)
-            console.log("12313")
           });
       }
 
@@ -89,7 +95,6 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (error) {
         isRefreshing = false;
-        console.log("123")
         processQueue(error);
         localStorage.removeItem('user');
         return Promise.reject(error);

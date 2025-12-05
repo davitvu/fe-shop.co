@@ -1,4 +1,5 @@
 import { authService } from "@/services/auth.service";
+import { userService } from "@/services/user.service";
 import type { User } from "@/types";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,33 +12,43 @@ type AuthContextType = {
     setIsLoading: (value: boolean) => void;
     isAuthenticated: boolean;
     logout: () => void;
+    fetchProfile: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const isLogged = localStorage.getItem('user');
-        if (isLogged) {
-            fetchMe();
+        const storedUser = localStorage.getItem('user');
+        
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+            fetchProfile();
+        } else {
+            localStorage.removeItem('user');
+            setIsLoading(false);
         }
-    }, [])
 
-    const fetchMe = async () => {
-        setIsLoading(true);
+    }, []);
+
+    const fetchProfile = async () => {
+        console.log("zozozo")
         try {
-            const res = await authService.getMe();
-            localStorage.setItem('user', JSON.stringify(res.data?.user))
-            if (!res.success) {
-                setIsLoading(false);
-                return;
+            const res = await userService.getMe();
+            if (res.data?.user) {
+                const { email, firstName, lastName } = res.data?.user;
+                localStorage.setItem('user', JSON.stringify({ email, firstName, lastName }))
+                setUser(res.data?.user!);
+            } else {
+                localStorage.removeItem('user');
+                setUser(null);
             }
-            setUser(res.data?.user!);
         } catch (error) {
+            localStorage.removeItem('user');
             setUser(null);
         } finally {
             setIsLoading(false);
@@ -46,15 +57,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const logout = async () => {
         try {
-            const res = await authService.logout();
+            await authService.logout();
             localStorage.removeItem('user');
-        } catch (error: any) {
-            toast(error)
-        } finally {
             setUser(null);
+            toast.success('Logged out successfully');
+            navigate('/');
+        } catch (error: any) {
+            localStorage.removeItem('user');
+            console.log("loi luc login", error);
+            setUser(null);
+            toast.error(error?.response?.data?.message || 'Logout failed');
+            navigate('/');
         }
-        toast('Logged out successfully');
-        navigate('/');
     }
 
     const value = {
@@ -63,7 +77,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         setIsLoading,
         isAuthenticated: !!user,
-        logout
+        logout,
+        fetchProfile
     }
 
     return (
