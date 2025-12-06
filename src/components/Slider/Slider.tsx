@@ -1,17 +1,20 @@
-import { Swiper } from "swiper/react";
-import "swiper/css";
+import { useKeenSlider } from "keen-slider/react"
+import 'keen-slider/keen-slider.min.css'
 
-const Slider = ({ children, slidesPerView, spaceBetween, loop = false }: any) => {
+const Slider = ({ children }: any) => {
+    const [ref] = useKeenSlider<HTMLDivElement>({
+        loop: true,
+        mode: "free",
+        slides: {
+            perView: "auto",
+            spacing: 20,
+        },
+    })
 
     return (
-        <Swiper
-            spaceBetween={spaceBetween}
-            slidesPerView={slidesPerView}
-            loop={loop}
-            // breakpoints={"{&quot;768&quot;:{&quot;slidesPerView&quot;:2},&quot;1024&quot;:{&quot;slidesPerView&quot;:3}}" as any}
-        >
+        <div ref={ref} className="keen-slider">
             {children}
-        </Swiper>
+        </div>
     )
 }
 

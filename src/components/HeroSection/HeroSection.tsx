@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom";
 import { Button } from "../Button/Button";
 import WrapperContent from "../Layouts/WrapperContent/WrapperContent";
+import { heroSectionData } from "./constant";
 
 const HeroSection = () => {
     return (
         <div className="bg-[#f2f0f1]">
             <WrapperContent>
-                <div className="w-full pt-10 lg:p-0 lg:h-[80vh] flex flex-col lg:flex-row lg:justify-between">
+                <div className="w-full pt-10 lg:p-0 lg:h-[80vh] lg:shrink-0 flex flex-col lg:flex-row lg:justify-between">
                     <div className="lg:w-1/2 my-auto">
-                        <h2 className="font-black text-6xl">FIND CLOTHES THAT MATCHES YOUR STYLE</h2>
-                        <p className="text-zinc-400 my-8">Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.</p>
-                        <Button
-                            className="w-full lg:w-[210px] mb-10"
-                        ><Link to={'/shop'}>Shop Now</Link></Button>
+                        <h2 className="section-title text-6xl!">{heroSectionData.title}</h2>
+                        <p className="text-zinc-400 my-8">{heroSectionData.description}</p>
+                        <Link to={'/shop'}>
+                            <Button className="w-full lg:w-[210px] mb-10">Shop Now</Button>
+                        </Link>
                         <div className="flex flex-wrap gap-10 justify-center lg:text-left text-center">
                             <div>
                                 <p className="text-3xl font-bold">200+</p>

@@ -1,42 +1,33 @@
+import { Element } from "react-scroll";
 import WrapperContent from "../Layouts/WrapperContent/WrapperContent";
 import ProductCard from "../ProductCard/ProductCard";
 import ProductSkeleton from "../Skeleton/ProductSkeleton/ProductSkeleton";
+import Slider from "../Slider/Slider";
 
 const NewArrivalsSection = ({
     data,
-    productLoading
+    getProductLoading
 }: {
     data: any;
-    productLoading: boolean;
+    getProductLoading: boolean;
 }) => {
     return (
         <WrapperContent>
-            <div className="my-20">
+            <Element className="my-20" name="newArrivals">
                 <h2 className="font-extrabold text-4xl text-center mb-10">NEW ARRIVALS</h2>
-                {!productLoading ? (
+                {!getProductLoading ? (
                     <>
-                        <div className="overflow-x-scroll flex gap-5">
+                        <Slider>
                             {data.map((item: any) => (
                                 <ProductCard
                                     id={item.id}
-                                    images={item.images}
                                     name={item.name}
+                                    slug={item.slug}
                                     price={item.price}
+                                    imageUrl={item.imageUrl}
                                 />
                             ))}
-                        </div>
-                        {/* <Slider slidesPerView={5} spaceBetween={20} >
-                            {data.map((item: any) => (
-                                <SwiperSlide key={item.id}>
-                                    <ProductCard
-                                        id={item.id}
-                                        images={item.images}
-                                        name={item.name}
-                                        price={item.price}
-                                    />
-                                </SwiperSlide>
-                            ))}
-                        </Slider> */}
+                        </Slider>
                     </>
                 ) : (
                     <>
@@ -45,7 +36,7 @@ const NewArrivalsSection = ({
                 )}
 
 
-            </div>
+            </Element>
         </WrapperContent>
     )
 }

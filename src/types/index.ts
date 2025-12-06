@@ -41,7 +41,7 @@ export interface FetchMeResponse {
 export interface BackendResponse<T> {
   success: boolean;
   message: string;
-  statusCode: 200;
+  statusCode: number;
   data?: T
 };
 
@@ -98,3 +98,40 @@ export interface HeaderType {
   onClick?: () => void;
   badgeCount?: boolean;
 };
+
+export interface ProductsPayload<T> {
+  products: T[]
+}
+
+export interface ProductCard {
+  id: string;
+  name: string;
+  slug: string;
+  price: string;
+  stock: string;
+  imageUrl: string;
+  category: {
+    name: string;
+    slug: string;
+  },
+  rating: number,
+  reviewCount: number,
+  soldQuantity: number
+}
+
+export interface ReviewsPayload<T> {
+  reviews: T[]
+}
+
+export interface ReviewCard {
+  id: string,
+  rating: number,
+  comment: string,
+  customer: {
+    id: string,
+    name: string,
+    avatar?: string,
+  },
+  createdAt: string,
+  verifiedPurchase: boolean
+}
