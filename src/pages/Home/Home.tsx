@@ -29,7 +29,7 @@ const Home = () => {
     } catch (error) {
       toast.error("get product error")
     } finally {
-      setProductLoading(false);
+      // setProductLoading(false);
     }
   }
 
