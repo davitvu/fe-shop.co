@@ -17,7 +17,7 @@ const Header = () => {
     return (
         <header className='fixed top-0 left-0 right-0 w-full h-[70px] bg-white shadow-2xs flex items-center z-50'>
             <WrapperContent>
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center gap-5'>
                     <div className='flex gap-3 items-center'>
                         <div className='active:scale-85 transition-transform lg:hidden cursor-pointer'
                             onClick={navModal.openModal}
@@ -54,7 +54,7 @@ const Header = () => {
                             </>
                         ))}
                     </div>
-                    <div className='hidden sm:block'>
+                    <div className='hidden sm:block grow'>
                         <SearchBox loading={false} />
                     </div>
                     <div className='ml-auto mr-5 block sm:hidden'>
