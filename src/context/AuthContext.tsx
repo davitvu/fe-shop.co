@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             localStorage.removeItem('user');
             setUser(null);
             toast.success('Logged out successfully');
-            navigate('/');
+            navigate('/login');
         } catch (error: any) {
             localStorage.removeItem('user');
             console.log("loi luc login", error);

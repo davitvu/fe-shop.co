@@ -7,7 +7,7 @@ const HeroSection = () => {
     return (
         <div className="bg-[#f2f0f1]">
             <WrapperContent>
-                <div className="w-full pt-10 lg:p-0 lg:h-[663px] lg:shrink-0 flex flex-col lg:flex-row lg:justify-between">
+                <div className="w-full pt-10 lg:p-0 lg:h-[663px] lg:shrink-0 flex flex-col lg:flex-row lg:justify-between select-none">
                     <div className="lg:w-1/2 my-auto">
                         <h2 className="section-title text-6xl!">{heroSectionData.title}</h2>
                         <p className="text-zinc-400 my-8">{heroSectionData.description}</p>

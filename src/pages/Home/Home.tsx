@@ -1,14 +1,14 @@
-import HeroSection from '@/components/HeroSection/HeroSection';
 import BrandLogosSection from '@/components/BrandLogosSection/BrandLogosSection';
-import NewArrivalsSection from '@/components/NewArrivalsSection/NewArrivalsSection';
-import TopSellingSection from '@/components/TopSellingSection/TopSellingSection';
 import BrowseByStyleSection from '@/components/BrowseByStyleSection/BrowseByStyleSection';
 import CustomerReviews from '@/components/CustomerReviews/CustomerReviews';
+import HeroSection from '@/components/HeroSection/HeroSection';
+import NewArrivalsSection from '@/components/NewArrivalsSection/NewArrivalsSection';
+import TopSellingSection from '@/components/TopSellingSection/TopSellingSection';
+import { productService } from '@/services/product.service';
+import { reviewService } from '@/services/review.service';
+import type { ProductCard, ReviewCard } from '@/types';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { productService } from '@/services/product.service';
-import type { ProductCard, ReviewCard } from '@/types';
-import { reviewService } from '@/services/review.service';
 
 const Home = () => {
   const [newArrivals, setNewArrivals] = useState<ProductCard[]>([]);
@@ -25,11 +25,10 @@ const Home = () => {
       setNewArrivals(newArrivalsRes.data?.products || []);
       setTopSelling(topSellingRes.data?.products || []);
       setFeaturedReviews(featuredReviewsRes.data?.reviews || []);
-      console.log(featuredReviewsRes)
     } catch (error) {
       toast.error("get product error")
     } finally {
-      // setProductLoading(false);
+      setProductLoading(false);
     }
   }
 

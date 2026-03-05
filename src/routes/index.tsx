@@ -92,7 +92,7 @@ export function PrivateRoute({ children }: { children: React.ReactElement }) {
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) return <Loading />
-    return isAuthenticated ? children : <Navigate to={'/'} replace />;
+    return isAuthenticated ? children : <Navigate to={'/login'} replace />;
 }
 
 export function GuestRoute({ children }: { children: React.ReactElement }) {
