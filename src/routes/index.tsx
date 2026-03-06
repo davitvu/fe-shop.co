@@ -1,6 +1,5 @@
 import Loading from "@/components/Loading/Loading";
 import { useAuth } from "@/context/AuthContext";
-import Category from "@/pages/Category/Category";
 import { lazy, type ReactElement } from "react"
 import { Navigate } from "react-router-dom";
 
